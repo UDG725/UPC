@@ -1,6 +1,6 @@
 void basic_mode()
 {
-    int factor_found = 0, factor = 2, no_of_factors = 0, num[2];
+    long factor = 2, no_of_factors = 0, num[2];
     char bm_selec[10], experssion[1000]; extern char temp;
 
     while(1)
@@ -30,7 +30,7 @@ void basic_mode()
 
             printf("\n\n  Enter the mathematical expression : ");
             scanf("%s" , experssion);
-            printf("\n  Answer : %lf\n" , eval(experssion));
+            printf("\n  Answer : %lf" , eval(experssion));
         }
         else if(strcmp(bm_selec , "m-t") == 0)
         {
@@ -38,16 +38,15 @@ void basic_mode()
 
             printf("\n\n  Enter the number of which you want the multiplication table");
             printf("\n\n  Enter here : ");
-            scanf("%d" , &num[0]);
+            scanf("%ld" , &num[0]);
 
             num[1] = 1;
             while (num[1]<=10){
-                printf("\n  %d x %d = %d" , num[0], num[1], num[0]*num[1]);
+                printf("\n  %ld x %ld = %ld" , num[0], num[1], num[0]*num[1]);
                 ++num[1];
             }
             num[0]=0; num[1]=0;
-            
-            printf("\n");
+
             scanf("%c" , &temp);
         }
         else if(strcmp(bm_selec , "factorize")==0)
@@ -55,102 +54,80 @@ void basic_mode()
             printf("\n  You have selected to factorize a number.");
 
             printf("\n\n  Enter the number you want to factorize : ");
-            scanf("%d" , &num[0]);
+            scanf("%ld" , &num[0]);
             num[1]=num[0];
 
-	        printf("\n  %d = " , num[0]);
-            while(factor_found==0)
+	        printf("\n  %ld = " , num[0]);
+            while(true)
             {
-                if((num[0]%factor==0) && (num[0]!=0))
+		        if(num[0]>=-1 && num[0]<=1)
                 {
-                    printf("%d*" , factor);
-                    num[0] = num[0]/factor;
+                    printf("%ld." , num[0]);
+                    break;
                 }
-                else if(num[0]==-1 || num[0]==0 || num[0]==1)
+                else if(num[0]%factor==0)
                 {
-                    printf("%d." , num[0]);
-                    factor_found=1;
-                }
-                else
-                {
-                    ++factor;
-                }
+                    printf("%ld*" , factor);
+                    num[0] /= factor;
+                } 
+                else 
+			        ++factor;
             }
-            factor=2; factor_found=0; num[0]=num[1];
+            
+            num[0]=num[1];
 
-            printf("\n\n  Factors of %d are : ", num[0]);
-	        if(num[0]==1 || num[0]==-1)
-	        {
-		        printf("%d,%d.", num[0], num[0]*-1);
-	        }
-	        else if(num[0]==0)
-	        {
-		        printf("Math Error");
-	        }
+            printf("\n\n  Factors of %ld are : ", num[0]);
+            if(num[0]==1 || num[0]==-1) 
+		        printf("%ld, %ld.", num[0], -num[0]);
+	        else if(num[0]==0) 
+		        fprintf(stderr, "Math Error.");
 	        else
 	        {
 		        printf("1, -1, ");
-		        while(factor_found==0)
+		        for(factor=2;; ++factor)
 		        {
-			        if(num[0]%factor==0 && num[0]!=factor && num[0]!=factor*(-1))
-			        {
-				        printf("%d, %d, ", factor, (factor*(-1)));
-				        ++factor;
-			        }
-			        else if(num[0]==factor || num[0]==factor*(-1))
-			        {
-				        printf("%d, %d.", num[0], (num[0]*(-1)));
-				        ++factor_found;
-			        }
-			        else
-			        {
-				        ++factor;
-			        }
+			        if (num[0]==factor || num[0]==-factor)
+                    {
+                        printf("%ld, %ld.", num[0], -num[0]);
+                        break;
+                    }
+                    else if (num[0]%factor==0)
+                        printf("%ld, %ld, ", factor, -factor);
 		        }
 	        }
-            factor=2; factor_found=0; num[0]=num[1]; no_of_factors=0;
+
+            num[0]=num[1];
             
-            if(num[0]==1 || num[0]==0)
+            if(num[0]>=-1 && num[0]<=1)
 	        {
-		        printf("\n\n  %d is nor prime nor composite.\n", num[0]);
-	        }
-	        else if(num[0]<=-1)
-	        {
-		        printf("\n\n  It is very complicated to determine if a negative number is prime or composite.\n");
+		        printf("\n\n  %ld is nor prime nor composite.", num[0]);
 	        }
 	        else
 	        {
-		        while(factor_found==0)
+		        long factor = 2, no_of_factors = 0;
+		        num[0] = labs(num[0]);
+		        while(true)
 		        {
-			        if(num[0]%factor==0 && num[0]!=factor && factor!=1)
+			        if(num[0]%factor==0 && num[0]!=factor)
 			        {
 				        ++no_of_factors;
-				        num[0]=num[0]/factor;
+				        num[0] /= factor;
 			        }
-			        else if(num[0]%factor==0 && (num[0]==factor || factor==1))
-			        {
-				        num[0]=num[0]/factor;
-			        }
-			        else if(num[0]==1)
-			        {
-				        ++factor_found;
-			        }
+			        else if(num[0]%factor==0 && num[0]==factor) 
+				        num[0] /= factor;
+			        else if(num[0]==1 || num[0]==-1) 
+				        break;
 			        else
-			        {
-			        	++factor;
-			        }
+				        ++factor;
 		        }
 
 		        if(no_of_factors==0)
-		        {
-		        	printf("\n\n  %d is a prime number.\n", num[1]);
-		        }
-		        else if(no_of_factors!=0)
-		        {
-		        	printf("\n\n  %d is a composite number.\n", num[1]);
-		        }
+			        printf("\n\n  %ld is a prime number.", num[1]);
+		        else
+			        printf("\n\n  %ld is a composite number.", num[1]);
 	        }
-            factor=2; factor_found=0; no_of_factors=0; num[0]=0; num[1]=0;
+
+            factor=2; no_of_factors=0; num[0]=NULL; num[1]=NULL;
             scanf("%c" , &temp);
         }
         else if(strcmp(bm_selec , "back")==0)
@@ -166,6 +143,6 @@ void basic_mode()
             goto bm_selec;
         }
 
-        my_pause(); clrscr();
+        printf("\n"); my_pause(); clrscr();
     }
 }
